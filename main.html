@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine?</title>
+    <style>
+        /* Existing CSS styles */
+        body {
+            background-color: #f4c1e1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .container {
+            text-align: center;
+            animation: fadeIn 3s ease-in-out;
+            max-width: 800px;
+            padding: 20px;
+        }
+
+        .food-item img, .activity-item img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ff6b81;
+        }
+
+        .food-item p, .activity-item p {
+            font-size: 1rem;
+            color: #333;
+            margin-top: 5px;
+        }
+
+        .selection-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            margin: 10px;
+        }
+
+        input[type="checkbox"] {
+            display: none;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #ff6b81;
+            text-shadow: 2px 2px #ffb3b8;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            color: white;
+            background-color: #ff6b81;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #ff4b5c;
+        }
+
+        #noButton {
+            position: relative;
+        }
+
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #ad0922;
+            transform: rotate(-45deg);
+            animation: fall 5s infinite;
+            border-radius: 50%;
+        }
+
+        .heart:before, .heart:after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #dc0f2e;
+            border-radius: 50%;
+        }
+
+        .heart:before {
+            top: -10px;
+            left: 0;
+        }
+
+        .heart:after {
+            top: 0;
+            left: 10px;
+        }
+
+        input[type="checkbox"]:checked + .activity-item img,
+        input[type="checkbox"]:checked + .food-item img {
+            border-color: #ff4b5c;
+            box-shadow: 0 0 10px #ff4b5c;
+        }
+
+        .selection-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-100vh) rotate(-45deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(-45deg); opacity: 0; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        img {
+            width: 150px;
+            height: auto;
+            margin: 10px 0;
+        }
+
+        input[type="date"] {
+            padding: 10px;
+            font-size: 1.1rem;
+            margin: 20px 0;
+            border: 2px solid #ff6b81;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="page1">
+        <h1>Will You Be My Valentine?</h1>
+        <p>Madamji, Haan ki Haan?</p>
+        <img src="flowers.gif" alt="flowers.gif">
+        <div>
+            <button onclick="goToNextPage('page2')">Yes</button>
+            <button id="noButton" onclick="moveNoButton()">No</button>
+        </div>
+    </div>
+
+    <div class="container" id="page2" style="display: none;">
+        <h1>I have a surprise planned for you!</h1>
+        <p>Are you ready for it?</p>
+        <img src="myheart.gif" alt="myheart.gif">
+        <div id="initialButtons">
+            <button onclick="showMusicPlayer()">See the Surprise</button>
+        </div>
+        
+    </div>
+        <!-- <div id="musicPlayer" style="display: none;">
+            <audio id="valentineSong">
+                <source src="ForYou.mp3" type="audio/mp3">
+                Your browser does not support the audio element.
+            </audio>
+            <button id="playButton" onclick="togglePlay()">▶️</button>
+            <p id="songStatus">Click to play your special song</p>
+            
+            Next button only shows after song completion
+            <div id="nextButtonContainer" style="display: none;">
+                <p>Song completed! Ready for the next surprise?</p>
+                <button onclick="goToNextPage('page3')">Next</button>
+            </div>
+        </div>
+
+    <div class="container" id="page3" style="display: none;">
+        <h1>Here’s Something Special for You!</h1>
+        <p>Enjoy this music I chose just for you 🎶</p>
+        <audio controls autoplay loop>
+            <source src="ForYou.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        <br><br>
+        <button onclick="goToNextPage('page4')">Next</button>
+    </div> -->
+    <div class="container" id="page3" style="display: none;">
+        <h1>Here’s Something Special for You!</h1>
+        <img src="music.gif" alt="music.gif">
+        <p>Enjoy this music I chose just for you 🎶</p>
+        
+        <!-- Audio Player -->
+        <audio id="valentineSong" controls autoplay loop>
+            <source src="ForYou.mp3" type="audio/mp3">
+            Your browser does not support the audio element.
+        </audio>
+        
+        <!-- Play/Pause Button -->
+        <!-- <button id="playButton" onclick="togglePlay()">▶️</button>
+        <p id="songStatus">Click to play your special song</p> -->
+        
+        <!-- Next Button (Shows after song completion) -->
+        <div id="nextButtonContainer" style="display: block;">
+            <p>Are you ready for the next surprise?</p>
+            <button onclick="goToNextPage('page4')">Next</button>
+        </div>
+    </div>
+    <script>
+
+    </script>
+
+    <div class="container" id="page4" style="display: none;">
+        <h1>When are you free?</h1>
+        <img src="IMWY.gif" alt="IMWY.gif">
+        <div>
+            <input type="date" id="datePicker">
+            <button onclick="goToNextPage('page5')">Next</button>
+        </div>
+    </div>
+
+    <div class="container" id="page5" style="display: none;">
+        <h1>What activities would you like to do?</h1>
+        <div class="selection-grid">
+            <label class="selection-label">
+                <input type="checkbox" name="activity" value="Movies">
+                <div class="activity-item">
+                    <img src="1_movie.jpg" alt="Movies">
+                    <p>Movies</p>
+                </div>
+            </label>
+            <label class="selection-label">
+                <input type="checkbox" name="activity" value="Dinner">
+                <div class="activity-item">
+                    <img src="2_dinner.jpg" alt="Dinner">
+                    <p>Dinner</p>
+                </div>
+            </label>
+            <label class="selection-label">
+                <input type="checkbox" name="activity" value="Arcade">
+                <div class="activity-item">
+                    <img src="9_arcade.jpg" alt="Arcade">
+                    <p>Playing Games</p>
+                </div>
+            </label>
+            <label class="selection-label">
+                <input type="checkbox" name="activity" value="Walk">
+                <div class="activity-item">
+                    <img src="3_walking.jpg" alt="Walk">
+                    <p>Walk in the Park</p>
+                </div>
+            </label>
+            <label class="selection-label">
+                <input type="checkbox" name="activity" value="Aquarium">
+                <div class="activity-item">
+                    <img src="10_aquarium.jpg" alt="Aquarium">
+                    <p>Visiting Aquarium</p>
+                </div>
+            </label>
+        </div>
+        <button onclick="goToNextPage('page6')">Next</button>
+    </div>
+
+    <div class="container" id="page6" style="display: none;">
+        <h1>What food would you like?</h1>
+        <div class="selection-grid">
+            <label class="selection-label">
+                <input type="checkbox" name="food" value="Burger">
+                <div class="food-item">
+                    <img src="4_burger.jpg" alt="Burger">
+                    <p>Burger</p>
+                </div>
+            </label>
+            <label class="selection-label">
+                <input type="checkbox" name="food" value="Fries">
+                <div class="food-item">
+                    <img src="5_fries.jpg" alt="Fries">
+                    <p>Fries</p>
+                </div>
+            </label>
+            <label class="selection-label">
+                <input type="checkbox" name="food" value="Pizza">
+                <div class="food-item">
+                    <img src="6_pizza.jpg" alt="Pizza">
+                    <p>Pizza</p>
+                </div>
+            </label>
+            <label class="selection-label">
+                <input type="checkbox" name="food" value="Sandwich">
+                <div class="food-item">
+                    <img src="7_sandwich.jpg" alt="Sandwich">
+                    <p>Sandwich</p>
+                </div>
+            </label>
+            <label class="selection-label">
+                <input type="checkbox" name="food" value="Pasta">
+                <div class="food-item">
+                    <img src="8_pasta.jpg" alt="Pasta">
+                    <p>Pasta</p>
+                </div>
+            </label>
+        </div>
+        <button onclick="goToNextPage('page7')">Next</button>
+    </div>
+    <div class="container" id="page7" style="display: none;">
+        <h1>Would you like to have some desert? </h1>
+        <p>As sweet as you!🥰</p>
+        <div class="selection-grid">
+            <label class="selection-label">
+                <input type="checkbox" name="desert" value="Cake">
+                <div class="food-item">
+                    <img src="mousse_cake.jpg" alt="Cake">
+                    <p>Mousse cake</p>
+                </div>
+            </label>
+            <label class="selection-label">
+                <input type="checkbox" name="desert" value="Brownie">
+                <div class="food-item">
+                    <img src="brownie.jpg" alt="Brownie">
+                    <p>Brownie</p>
+                </div>
+            </label>
+            <label class="selection-label">
+                <input type="checkbox" name="desert" value="churros">
+                <div class="food-item">
+                    <img src="churros.jpg" alt="Churros">
+                    <p>Churros</p>
+                </div>
+            </label>
+            <label class="selection-label">
+                <input type="checkbox" name="desert" value="Ice-cream">
+                <div class="food-item">
+                    <img src="ice-cream.jpg" alt="Ice-cream">
+                    <p>Ice-cream</p>
+                </div>
+            </label>
+            <label class="selection-label">
+                <input type="checkbox" name="desert" value="Pancake">
+                <div class="food-item">
+                    <img src="pan_cakes.jpg" alt="Pancake">
+                    <p>Pancake</p>
+                </div>
+            </label>
+        </div>
+        <button onclick="goToNextPage('finalPage')">Next</button>
+    </div>
+
+    <div class="container" id="finalPage" style="display: none;">
+        <h1>Thankyou for saying 'Yess'! </h1>
+        <p>I'm grateful and lucky to have you, cheers to us!. I Love you 💝
+            Can’t wait to start forever with you—my heart is officially yours. ❤️💍
+        </p>
+        <img src="love.gif" alt="love.gif">
+    </div>
+
+    <script>
+        // Function to handle page navigation
+        function goToNextPage(nextPageId) {
+            // Hide all pages
+            document.querySelectorAll('.container').forEach(page => {
+                page.style.display = 'none';
+            });
+            // Show the next page
+            document.getElementById(nextPageId).style.display = 'block';
+        }
+
+        // Function to move the No button
+        function moveNoButton() {
+            const noButton = document.getElementById('noButton');
+            noButton.style.position = 'absolute';
+            noButton.style.top = Math.random() * 80 + 'vh';
+            noButton.style.left = Math.random() * 80 + 'vw';
+        }
+
+        // Function to handle music player navigation
+        function showMusicPlayer() {
+            // Hide initial buttons
+            document.getElementById('page2').style.display = 'none';
+            // Show music player
+            document.getElementById('page3').style.display = 'block';
+        }
+
+        // Function to toggle play/pause for the audio
+        function togglePlay() {
+            const audio = document.getElementById('valentineSong');
+            const playButton = document.getElementById('playButton');
+            const songStatus = document.getElementById('songStatus');
+
+            if (audio.paused) {
+                audio.play();
+                playButton.textContent = "⏸️";
+                songStatus.textContent = "Playing your special song...";
+            } else {
+                audio.pause();
+                playButton.textContent = "▶️";
+                songStatus.textContent = "Song paused";
+            }
+        }
+
+        // Add event listener for song completion
+        document.getElementById('valentineSong').addEventListener('ended', function() {
+            console.log('Song ended!');
+            document.getElementById('playButton').style.display = 'none';
+            document.getElementById('songStatus').textContent = "Song finished!";
+            // document.getElementById('nextButtonContainer').style.display = 'block';
+        });
+
+        // Add falling hearts
+        function createHearts() {
+            for (let i = 0; i < 20; i++) {
+                let heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = 2 + Math.random() * 3 + 's';
+                document.body.appendChild(heart);
+            }
+        }
+
+        // Initialize hearts when page loads
+        window.onload = createHearts;
+    </script>
+</body>
+</html>
